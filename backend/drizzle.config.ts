@@ -1,13 +1,10 @@
-import type { Config } from "drizzle-kit";
+import { defineConfig } from 'drizzle-kit';
 
-export default {
-  schema: "./src/db/schema.ts",
-  out: "./drizzle",
-  driver: "mysql2",
+export default defineConfig({
+  schema: './src/db/schema.ts',
+  out: './drizzle',
+  dialect: 'mysql',
   dbCredentials: {
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME || "restoran_db",
+    url: "mysql://root@localhost:3306/restoran_db"
   },
-} satisfies Config;
+});

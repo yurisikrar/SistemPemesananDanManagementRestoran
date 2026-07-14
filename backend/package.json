@@ -8,6 +8,7 @@
   "build": "tsc -p tsconfig.json",
   "start": "node dist/index.js",
   "db:generate": "drizzle-kit generate",
+  "db:migrate": "drizzle-kit migrate",
   "db:push": "drizzle-kit push", 
   "db:seed": "tsx src/db/seeds/seedResto.ts",
   "test": "echo \"Error: no test specified\" && exit 1"
