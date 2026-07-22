@@ -3,7 +3,6 @@ import path from "path";
 import dotenv from "dotenv";
 
 import menuRoutes from "./routes/menuRoutes";
-import mejaRoutes from "./routes/mejaRoutes";
 import pesananRoutes from "./routes/pesananRoutes";
 
 dotenv.config();
@@ -19,7 +18,6 @@ app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 
 // Routing API
 app.use("/api/menu", menuRoutes);
-app.use("/api/meja", mejaRoutes);
 app.use("/api/pesanan", pesananRoutes);
 
 app.listen(port, () => {

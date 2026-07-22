@@ -1,9 +1,18 @@
 import { Router } from "express";
-import { getSemuaMeja, kosongkanMeja } from "../controllers/mejaController";
+import { 
+  getAllMeja, 
+  getMejaById, 
+  createMeja, 
+  updateMeja, 
+  deleteMeja 
+} from "../controllers/mejaController";
 
 const router = Router();
 
-router.get("/", getSemuaMeja);
-router.put("/:id/kosongkan", kosongkanMeja);
+router.get("/meja", getAllMeja);
+router.get("/meja/:id", getMejaById);
+router.post("/meja", createMeja);
+router.put("/meja/:id", updateMeja);
+router.delete("/meja/:id", deleteMeja);
 
 export default router;

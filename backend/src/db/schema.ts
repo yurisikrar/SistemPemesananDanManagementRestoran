@@ -1,10 +1,4 @@
-import { mysqlTable, varchar, int, timestamp, mysqlEnum } from "drizzle-orm/mysql-core";
-
-export const meja = mysqlTable("meja", {
-  id: int("id").autoincrement().primaryKey(),
-  nomor_meja: varchar("nomor_meja", { length: 10 }).notNull(),
-  status: mysqlEnum("status", ["Tersedia", "Ditempati"]).default("Tersedia"),
-});
+import { mysqlTable, varchar, int, timestamp, mysqlEnum, boolean } from "drizzle-orm/mysql-core";
 
 export const menu = mysqlTable("menu", {
   id: int("id").autoincrement().primaryKey(),
@@ -12,11 +6,25 @@ export const menu = mysqlTable("menu", {
   harga: int("harga").notNull(),
   stok: int("stok").notNull(),
   gambar: varchar("gambar", { length: 255 }), 
+  is_active: boolean("is_active").default(true).notNull(), // Menyimpan status aktif menu
+});
+
+export const meja = mysqlTable("meja",{
+  id: int("id").autoincrement().primaryKey(),
+  status_meja: varchar("status_meja", { length: 50 }).notNull(),
+});
+
+export const kasir = mysqlTable("kasir", {
+  id: int("id").autoincrement().primaryKey(),
+  username: varchar("username", { length: 50 }).notNull().unique(),
+  password: varchar("password", { length: 255 }).notNull(), 
+  nama_lengkap: varchar("nama_lengkap", { length: 100 }),
 });
 
 export const pesanan = mysqlTable("pesanan", {
   id: int("id").autoincrement().primaryKey(),
-  id_meja: int("id_meja").notNull().references(() => meja.id),
+  id_kasir: int("id_kasir").references(() => kasir.id), // Mencatat kasir penanggung jawab
+  id_meja: int("id_meja").references(() => meja.id),
   total_harga: int("total_harga").default(0),
   status_bayar: mysqlEnum("status_bayar", ["Belum Lunas", "Lunas"]).default("Belum Lunas"),
   tanggal: timestamp("tanggal").defaultNow(),
@@ -30,9 +38,3 @@ export const detailPesanan = mysqlTable("detail_pesanan", {
   subtotal: int("subtotal").notNull(),
 });
 
-export const kasir = mysqlTable("kasir", {
-  id: int("id").autoincrement().primaryKey(),
-  username: varchar("username", { length: 50 }).notNull().unique(),
-  password: varchar("password", { length: 255 }).notNull(), 
-  nama_lengkap: varchar("nama_lengkap", { length: 100 }),
-});

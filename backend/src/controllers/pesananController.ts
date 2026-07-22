@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import { db } from "../db";
-import { pesanan, detailPesanan, meja, menu } from "../db/schema";
+import { pesanan, detailPesanan, menu } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 export const buatPesanan = async (req: Request, res: Response) => {
   try {
-    const { id_meja, total_harga, keranjang } = req.body;
+    const { total_harga, keranjang } = req.body;
     // keranjang format: [{ id_menu: 1, jumlah: 2, subtotal: 50000 }]
 
     await db.transaction(async (tx) => {
       // 1. Buat pesanan utama
       const [insertResult] = await tx.insert(pesanan).values({
-        id_meja,
         total_harga,
         status_bayar: "Belum Lunas"
       });
@@ -36,7 +35,7 @@ export const buatPesanan = async (req: Request, res: Response) => {
 
 export const konfirmasiPembayaran = async (req: Request, res: Response) => {
   try {
-    const { id_pesanan, id_meja } = req.body;
+    const { id_pesanan } = req.body;
 
     await db.transaction(async (tx) => {
       // 1. Ambil detail pesanan
@@ -53,12 +52,9 @@ export const konfirmasiPembayaran = async (req: Request, res: Response) => {
 
       // 3. Update status pesanan
       await tx.update(pesanan).set({ status_bayar: "Lunas" }).where(eq(pesanan.id, id_pesanan));
-
-      // 4. Update status meja
-      await tx.update(meja).set({ status: "Ditempati" }).where(eq(meja.id, id_meja));
     });
 
-    res.json({ success: true, message: "Pembayaran berhasil, meja menjadi ditempati" });
+    res.json({ success: true, message: "Pembayaran berhasil" });
   } catch (error) {
     res.status(500).json({ success: false, error });
   }
