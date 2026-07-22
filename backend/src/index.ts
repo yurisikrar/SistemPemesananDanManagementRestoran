@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 
 import menuRoutes from "./routes/menuRoutes";
 import pesananRoutes from "./routes/pesananRoutes";
+import authRoutes from "./routes/authRoutes";
+import mejaRoutes from "./routes/mejaRoutes";
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 // Routing API
 app.use("/api/menu", menuRoutes);
 app.use("/api/pesanan", pesananRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/meja", mejaRoutes);
 
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);

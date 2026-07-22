@@ -49,16 +49,19 @@ export const getMejaById = async (req: Request, res: Response) => {
 // POST New Meja
 export const createMeja = async (req: Request, res: Response) => {
   try {
-    const { status_meja } = req.body;
+    const { nomor_meja, status } = req.body;
 
-    if (!status_meja) {
+    if (!nomor_meja) {
       return res.status(400).json({
         success: false,
-        message: "status_meja wajib diisi",
+        message: "nomor_meja wajib diisi",
       });
     }
 
-    const result = await db.insert(meja).values({ status_meja });
+    const result = await db.insert(meja).values({ 
+      nomor_meja, 
+      status: status || "Tersedia"
+    });
     
     return res.status(201).json({
       success: true,
@@ -78,18 +81,22 @@ export const createMeja = async (req: Request, res: Response) => {
 export const updateMeja = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { status_meja } = req.body;
+    const { nomor_meja, status } = req.body;
 
-    if (!status_meja) {
+    const updateData: any = {};
+    if (nomor_meja !== undefined) updateData.nomor_meja = nomor_meja;
+    if (status !== undefined) updateData.status = status;
+
+    if (Object.keys(updateData).length === 0) {
       return res.status(400).json({
         success: false,
-        message: "status_meja wajib diisi",
+        message: "Tidak ada data yang diubah",
       });
     }
 
     const result = await db
       .update(meja)
-      .set({ status_meja })
+      .set(updateData)
       .where(eq(meja.id, Number(id)));
 
     return res.status(200).json({
