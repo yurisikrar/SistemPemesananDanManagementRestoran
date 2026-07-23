@@ -16,14 +16,15 @@ export const getSemuaMenu = async (req: Request, res: Response) => {
 
 export const tambahMenu = async (req: Request, res: Response) => {
   try {
-    const { nama_menu, harga, stok } = req.body;
+    const { nama_menu, harga, stok, is_active } = req.body;
     const gambar = req.file ? req.file.filename : null;
 
     await db.insert(menu).values({
       nama_menu,
       harga: Number(harga),
       stok: Number(stok),
-      gambar
+      gambar,
+      is_active: is_active !== undefined ? (is_active === 'true' || is_active === true || Number(is_active) === 1) : true
     });
     res.json({ success: true, message: "Menu berhasil ditambahkan" });
   } catch (error) {
@@ -34,7 +35,7 @@ export const tambahMenu = async (req: Request, res: Response) => {
 export const editMenu = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { nama_menu, harga, stok } = req.body;
+    const { nama_menu, harga, stok, is_active } = req.body;
     const gambarBaru = req.file ? req.file.filename : null;
 
     const dataLama = await db.select().from(menu).where(eq(menu.id, Number(id)));
@@ -54,7 +55,8 @@ export const editMenu = async (req: Request, res: Response) => {
       nama_menu,
       harga: Number(harga),
       stok: Number(stok),
-      gambar: namaGambar
+      gambar: namaGambar,
+      is_active: is_active !== undefined ? (is_active === 'true' || is_active === true || Number(is_active) === 1) : true
     }).where(eq(menu.id, Number(id)));
 
     res.json({ success: true, message: "Menu berhasil diupdate" });
