@@ -197,6 +197,10 @@
         // Reset Form & Keranjang
         keranjangStore.set([{ id: crypto.randomUUID(), id_menu: '', jumlah: 1, harga: 0 }]);
         localStorage.removeItem('draftPesanan');
+        
+        // Refresh daftar menu dan meja dari backend agar stok & ketersediaan meja ter-update langsung
+        fetchMenu();
+        fetchMeja();
       } else {
         alert("Gagal memproses pesanan: " + (result.message || "Terjadi kesalahan sistem"));
       }
