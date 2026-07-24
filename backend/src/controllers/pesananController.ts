@@ -38,6 +38,18 @@ export const buatPesanan = async (req: Request, res: Response) => {
       }));
       await tx.insert(detailPesanan).values(detailData);
 
+      // Potong stok menu langsung saat pesanan dibuat
+      for (const item of keranjang) {
+        const menuData = await tx.select().from(menu).where(eq(menu.id, Number(item.id_menu)));
+        if (menuData.length > 0) {
+          if (menuData[0].stok < Number(item.jumlah)) {
+            throw new Error(`Stok menu "${menuData[0].nama_menu}" tidak mencukupi`);
+          }
+          const stokBaru = menuData[0].stok - Number(item.jumlah);
+          await tx.update(menu).set({ stok: stokBaru }).where(eq(menu.id, Number(item.id_menu)));
+        }
+      }
+
       // Ubah status meja menjadi 'Tidak Tersedia'
       if (id_meja) {
         await tx.update(meja).set({ status: "Tidak Tersedia" }).where(eq(meja.id, Number(id_meja)));
@@ -56,13 +68,18 @@ export const buatPesanan = async (req: Request, res: Response) => {
   }
 };
 
-// 2. Get Pesanan Aktif untuk Dashboard Kasir (TIDAK Menampilkan Status "Selesai")
+// 2. Get Pesanan Aktif untuk Dashboard Kasir (TIDAK Menampilkan Status "Selesai" dan "Cancel")
 export const getPesananAktif = async (req: Request, res: Response) => {
   try {
-    // Hanya ambil pesanan yang status_pesanan BUKAN "Selesai"
+    // Hanya ambil pesanan yang status_pesanan BUKAN "Selesai" dan status_bayar BUKAN "Cancel"
     const activeOrders = await db.select()
       .from(pesanan)
-      .where(ne(pesanan.status_pesanan, "Selesai"));
+      .where(
+        and(
+          ne(pesanan.status_pesanan, "Selesai"),
+          ne(pesanan.status_bayar, "Cancel")
+        )
+      );
 
     const data = [];
     for (const order of activeOrders) {
@@ -142,21 +159,26 @@ export const updatePesanan = async (req: Request, res: Response) => {
       if (status_pesanan) updatePayload.status_pesanan = status_pesanan;
       if (id_staf) updatePayload.id_staf = Number(id_staf);
 
-      // Jika diset ke Selesai tetapi Belum Lunas, gagalkan
+      // Jika diset ke Selesai tetapi Belum Lunas atau Cancel, gagalkan
       const finalStatusBayar = status_bayar || pesananData[0].status_bayar;
       if (status_pesanan === "Selesai" && finalStatusBayar !== "Lunas") {
         throw new Error("Pesanan tidak dapat diselesaikan karena pembayaran Belum Lunas!");
       }
 
-      // Potong stok menu jika status bayar berubah menjadi Lunas
-      if (status_bayar === "Lunas" && pesananData[0].status_bayar !== "Lunas") {
+      // Jika status_bayar diubah menjadi Cancel (dan sebelumnya bukan Cancel), kembalikan stok menu & status meja
+      if (status_bayar === "Cancel" && pesananData[0].status_bayar !== "Cancel") {
         const detail = await tx.select().from(detailPesanan).where(eq(detailPesanan.id_pesanan, Number(id)));
         for (const item of detail) {
           const menuData = await tx.select().from(menu).where(eq(menu.id, item.id_menu));
           if (menuData.length > 0) {
-            const stokBaru = Math.max(0, menuData[0].stok - item.jumlah);
+            const stokBaru = menuData[0].stok + item.jumlah;
             await tx.update(menu).set({ stok: stokBaru }).where(eq(menu.id, item.id_menu));
           }
+        }
+
+        const idMeja = pesananData[0].id_meja;
+        if (idMeja) {
+          await tx.update(meja).set({ status: "Tersedia" }).where(eq(meja.id, idMeja));
         }
       }
 
@@ -191,16 +213,6 @@ export const konfirmasiPembayaran = async (req: Request, res: Response) => {
       
       if (pesananData.length === 0) {
         throw new Error("Pesanan tidak ditemukan");
-      }
-
-      const detail = await tx.select().from(detailPesanan).where(eq(detailPesanan.id_pesanan, Number(id_pesanan)));
-
-      for (const item of detail) {
-        const menuData = await tx.select().from(menu).where(eq(menu.id, item.id_menu));
-        if (menuData.length > 0) {
-          const stokBaru = Math.max(0, menuData[0].stok - item.jumlah);
-          await tx.update(menu).set({ stok: stokBaru }).where(eq(menu.id, item.id_menu));
-        }
       }
 
       await tx.update(pesanan).set({ 
