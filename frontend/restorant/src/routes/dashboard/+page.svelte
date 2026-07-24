@@ -6,7 +6,7 @@
   let antreanPesanan = $state([]);
   let isLoading = $state(true);
 
-  // Ambil data pesanan aktif dari backend (HANYA status selain 'Selesai')
+  // Ambil data pesanan aktif dari backend (HANYA status selain 'Selesai' dan 'Cancel')
   async function fetchPesananAktif() {
     isLoading = true;
     try {
@@ -14,7 +14,7 @@
       if (res.ok) {
         const json = await res.json();
         if (json.success && Array.isArray(json.data)) {
-          antreanPesanan = json.data;
+          antreanPesanan = json.data.filter((/** @type {any} */ p) => p.status_pesanan !== 'Selesai' && p.status_pesanan !== 'Cancel');
         }
       }
     } catch (e) {
@@ -88,7 +88,7 @@
   <!-- Menggunakan styling typografi bawaan dari layout.css (h2, p) -->
   <h2 style="color: #1d3557; margin-top: 0;">Antrean Pesanan Aktif</h2>
   <p style="color: var(--text-muted); margin-bottom: 2rem;">
-    Kelola status pembayaran dan tahapan pesanan. Pesanan yang diselesaikan akan otomatis dihapus dari daftar ini.
+    Kelola status pembayaran dan tahapan pesanan. Pesanan yang diselesaikan atau dibatalkan (Cancel) akan otomatis dihapus dari daftar ini.
   </p>
 
   <!-- Menggunakan class .card dari layout.css sebagai pembungkus -->

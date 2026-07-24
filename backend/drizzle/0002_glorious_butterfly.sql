@@ -1,0 +1,1 @@
+ALTER TABLE `pesanan` MODIFY COLUMN `status_pesanan` enum('Diterima','Proses','Disajikan','Selesai','Cancel') DEFAULT 'Diterima';

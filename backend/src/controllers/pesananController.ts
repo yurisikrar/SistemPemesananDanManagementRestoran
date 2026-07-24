@@ -325,7 +325,8 @@ export const getPesananDapur = async (req: Request, res: Response) => {
       .where(
         and(
           eq(pesanan.status_bayar, "Lunas"),
-          ne(pesanan.status_pesanan, "Selesai")
+          ne(pesanan.status_pesanan, "Selesai"),
+          ne(pesanan.status_pesanan, "Cancel")
         )
       );
 
