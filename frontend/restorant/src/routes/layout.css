@@ -1,0 +1,257 @@
+@import 'tailwindcss';
+:root {
+  --primary-color: #e63946;
+  --primary-hover: #d62828;
+  --bg-light: #f8f9fa;
+  --text-dark: #333;
+  --text-muted: #666;
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap; /* Mengizinkan elemen turun ke baris baru jika layar sempit */
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
+.links{
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.links:hover{
+  color: var(--primary-color);
+}
+
+/* --- HERO SECTION --- */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  min-height: 60vh;
+}
+
+.hero-content h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1d3557;
+  line-height: 1.2;
+}
+
+.hero-content p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Button & Animations */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+}
+
+.cta-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* --- FEATURES / MENU SECTION --- */
+.features-section {
+  padding: 4rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  color: #1d3557;
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile First Grid: 1 Kolom */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* Card Component */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-image {
+  height: 200px;
+  background-color: #ddd;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-content h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #1d3557;
+}
+
+.card-content p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* --- FOOTER --- */
+.main-footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: #1d3557;
+  color: #f1faee;
+  margin-top: auto; /* Mendorong footer ke paling bawah */
+}
+
+/* --- ANIMASI SPINNER --- */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   MEDIA QUERIES (RESPONSIVE ENHANCEMENTS)
+   ========================================= */
+
+/* 1. Mobile Extra Small (Layar sangat kecil) */
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    gap: 1.2rem;
+  }
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+  .hero-section {
+    padding: 3rem 1rem;
+  }
+}
+
+/* 2. Tablet (Layar Sedang) */
+@media (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr); /* Menjadi 2 Kolom */
+    gap: 2rem;
+  }
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+}
+
+/* 3. Desktop (Layar Besar) */
+@media (min-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr); /* Menjadi 3 Kolom */
+  }
+  .hero-content h1 {
+    font-size: 3.5rem;
+  }
+}
+
