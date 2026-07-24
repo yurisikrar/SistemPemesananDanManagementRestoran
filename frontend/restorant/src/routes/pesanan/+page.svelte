@@ -59,14 +59,17 @@
       if (res.ok) {
         const json = await res.json();
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          daftarMenu = json.data.filter((/** @type {any} */ m) => m.is_active === undefined || (m.is_active !== false && m.is_active !== 0 && m.is_active !== '0'));
+          daftarMenu = json.data.filter((/** @type {any} */ m) => 
+            (m.is_active === undefined || (m.is_active !== false && m.is_active !== 0 && m.is_active !== '0')) &&
+            Number(m.stok) > 0
+          );
           return;
         }
       }
     } catch (e) {
       console.warn('Backend API Menu tidak terjangkau, menggunakan fallback local:', e);
     }
-    daftarMenu = defaultMenu;
+    daftarMenu = defaultMenu.filter((/** @type {any} */ m) => Number(m.stok) > 0);
   }
 
   onMount(() => {
