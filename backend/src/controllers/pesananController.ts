@@ -13,6 +13,14 @@ export const buatPesanan = async (req: Request, res: Response) => {
     }
 
     const newOrderId = await db.transaction(async (tx) => {
+      // Jika memilih meja, pastikan meja masih tersedia
+      if (id_meja) {
+        const targetMeja = await tx.select().from(meja).where(eq(meja.id, Number(id_meja))).limit(1);
+        if (targetMeja.length > 0 && targetMeja[0].status === "Tidak Tersedia") {
+          throw new Error("Meja yang dipilih sudah tidak tersedia");
+        }
+      }
+
       const [insertResult] = await tx.insert(pesanan).values({
         id_meja: id_meja ? Number(id_meja) : null,
         total_harga: Number(total_harga),
@@ -30,6 +38,11 @@ export const buatPesanan = async (req: Request, res: Response) => {
       }));
       await tx.insert(detailPesanan).values(detailData);
 
+      // Ubah status meja menjadi 'Tidak Tersedia'
+      if (id_meja) {
+        await tx.update(meja).set({ status: "Tidak Tersedia" }).where(eq(meja.id, Number(id_meja)));
+      }
+
       return idPesananBaru;
     });
 
@@ -38,8 +51,8 @@ export const buatPesanan = async (req: Request, res: Response) => {
       message: "Pesanan berhasil dibuat", 
       data: { id_pesanan: newOrderId } 
     });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Gagal membuat pesanan", error });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message || "Gagal membuat pesanan", error });
   }
 };
 
@@ -314,3 +327,66 @@ export const getPesananDapur = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: "Gagal mengambil data pesanan dapur", error });
   }
 };
+
+// 8. Get Seluruh Riwayat Pesanan (Semua Status)
+export const getRiwayatPesanan = async (req: Request, res: Response) => {
+  try {
+    const allOrders = await db.select().from(pesanan);
+
+    const data = [];
+    for (const order of allOrders) {
+      const items = await db.select({
+        id: detailPesanan.id,
+        id_menu: detailPesanan.id_menu,
+        jumlah: detailPesanan.jumlah,
+        subtotal: detailPesanan.subtotal,
+        nama_menu: menu.nama_menu,
+        harga: menu.harga
+      })
+      .from(detailPesanan)
+      .innerJoin(menu, eq(detailPesanan.id_menu, menu.id))
+      .where(eq(detailPesanan.id_pesanan, order.id));
+
+      let nomorMeja = "Take Away (Bungkus)";
+      if (order.id_meja) {
+        const mejaData = await db.select().from(meja).where(eq(meja.id, order.id_meja)).limit(1);
+        if (mejaData.length > 0) {
+          nomorMeja = mejaData[0].nomor_meja;
+        }
+      }
+
+      let namaStaf = "-";
+      if (order.id_staf) {
+        const stafData = await db.select().from(staf).where(eq(staf.id, order.id_staf)).limit(1);
+        if (stafData.length > 0) {
+          namaStaf = stafData[0].nama_lengkap || stafData[0].username;
+        }
+      }
+
+      const menuString = items.map(i => `${i.nama_menu} (${i.jumlah}x)`).join(", ");
+
+      data.push({
+        id: order.id,
+        no_pesanan: `#${order.id}`,
+        id_meja: order.id_meja,
+        nomor_meja: nomorMeja,
+        id_staf: order.id_staf,
+        nama_staf: namaStaf,
+        menu: menuString || "Menu Kosong",
+        total_harga: order.total_harga,
+        status_bayar: order.status_bayar,
+        status_pesanan: order.status_pesanan,
+        tanggal: order.tanggal,
+        items
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Gagal mengambil riwayat pesanan", error });
+  }
+};
+
