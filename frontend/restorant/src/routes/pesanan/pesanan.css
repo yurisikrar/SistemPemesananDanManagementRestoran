@@ -1,0 +1,290 @@
+/* Styling Khusus Form Pesanan (Menggabungkan bawaan layout.css) */
+.form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* Tablet & Desktop Layout */
+@media (min-width: 600px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-weight: bold;
+  color: #333;
+}
+
+.input-group select,
+.input-group input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group select:focus,
+.input-group input:focus {
+  outline: none;
+  border-color: #e63946;
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+}
+
+.divider {
+  border: 0;
+  border-top: 1px dashed #cbd5e1;
+  margin: 2rem 0;
+}
+
+/* Animasi Transisi Baris Menu Masuk */
+@keyframes fadeInRow {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Transisi Hover & Fade-in pada baris */
+.menu-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  animation: fadeInRow 0.3s ease-out forwards;
+  transition: box-shadow 0.3s ease;
+}
+
+.menu-row:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.menu-select-wrapper {
+  flex: 1 1 200px;
+}
+.menu-select-wrapper select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.counter-wrapper {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.counter-btn {
+  background: #f1f1f1;
+  border: none;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.counter-btn:hover { background: #e2e8f0; }
+.counter-btn.minus { color: #e63946; }
+.counter-btn.plus { color: #2a9d8f; }
+
+.counter-number {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Tombol Aksi */
+.add-row-btn {
+  background: transparent;
+  border: 2px dashed #94a3b8;
+  color: #64748b;
+  padding: 1rem;
+  width: 100%;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-row-btn:hover {
+  border-color: #e63946;
+  color: #e63946;
+  background: #fff0f1;
+}
+
+/* Checkout Section */
+.checkout-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+.total-harga {
+  font-size: 1.2rem;
+}
+.total-harga strong {
+  font-size: 2rem;
+  color: #e63946;
+  margin-left: 0.5rem;
+}
+
+/* Loading Spinner Modal / Overlay CSS */
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.counter-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stok-text {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.stok-text.stok-limit {
+  color: #e63946;
+  font-weight: bold;
+}
+
+.counter-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #e2e8f0;
+}
+
+.help-text {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.item-subtotal {
+  font-weight: 600;
+  color: #1d3557;
+  font-size: 0.95rem;
+  margin-left: auto;
+}
+
+.single-col {
+  grid-template-columns: 1fr !important;
+}
+
+/* Modal Pesanan Sukses */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeInRow 0.25s ease-out;
+}
+
+.modal-card {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.order-id-label {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+.order-id-badge {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #e63946;
+  background: #f1f5f9;
+  padding: 0.5rem 1.5rem;
+  border-radius: 12px;
+  display: inline-block;
+  margin: 0.5rem 0 1rem 0;
+  letter-spacing: 2px;
+  border: 2px dashed #cbd5e1;
+}
+
+.order-details-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.order-details-box p {
+  margin: 0.3rem 0;
+  color: #334155;
+}
+
+.modal-info {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+}
