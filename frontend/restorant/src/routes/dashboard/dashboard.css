@@ -1,0 +1,155 @@
+/* --- LAYOUT SIDEBAR & KONTEN --- */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-light); /* Meminjam dari layout.css */
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 260px;
+  background-color: #1d3557;
+  color: #f1faee;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  /* Tambahan transisi halus saat margin diubah */
+  transition: margin-left 0.3s ease-in-out; 
+}
+
+/* Class ini akan aktif dan menggeser sidebar keluar layar ke kiri */
+.sidebar.hidden {
+  margin-left: -260px;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+}
+
+.sidebar h2 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 1rem;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: #a8dadc;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Main Content */
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* --- STYLING TABEL PESANAN --- */
+.table-container {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table th {
+  background-color: #f8fafc;
+  color: #1d3557;
+  font-weight: bold;
+}
+
+.data-table tr {
+  transition: background-color 0.2s ease;
+}
+
+.data-table tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Dropdown di dalam tabel */
+.table-select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-family: var(--font-main);
+  outline: none;
+}
+.table-select:focus {
+  border-color: var(--primary-color);
+}
+
+/* Tombol Centang Kecil */
+.btn-check {
+  background-color: #2a9d8f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-check:hover {
+  background-color: #21867a;
+  transform: scale(1.05);
+}
+
+/* --- STYLING TOPBAR & TOGGLE BTN --- */
+.dashboard-topbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-btn {
+  background-color: #1d3557;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #2a9d8f;
+  transform: translateY(-2px);
+}
