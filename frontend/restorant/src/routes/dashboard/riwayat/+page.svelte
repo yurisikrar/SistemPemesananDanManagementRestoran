@@ -20,7 +20,7 @@
     menu: string;
     total_harga: number;
     status_bayar: 'Belum Lunas' | 'Lunas';
-    status_pesanan: 'Diterima' | 'Proses' | 'Disajikan' | 'Selesai';
+    status_pesanan: 'Diterima' | 'Proses' | 'Disajikan' | 'Selesai' | 'Cancel';
     tanggal?: string;
     items?: PesananItem[];
   }
@@ -149,5 +149,10 @@
   .badge-status-selesai {
     background-color: #d1fae5;
     color: #047857;
+  }
+
+  .badge-status-cancel {
+    background-color: #fee2e2;
+    color: #b91c1c;
   }
 </style>

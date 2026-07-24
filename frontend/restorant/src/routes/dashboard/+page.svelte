@@ -65,8 +65,8 @@
       if (res.ok && result.success) {
         alert(`Perubahan pesanan ${pesanan.no_pesanan} berhasil diproses.`);
 
-        // 3. Logika Utama: Jika status diset ke "Selesai", hapus dari antrean pesanan aktif di dashboard
-        if (pesanan.status_pesanan === 'Selesai') {
+        // 3. Logika Utama: Jika status diset ke "Selesai" atau "Cancel", hapus dari antrean pesanan aktif di dashboard
+        if (pesanan.status_pesanan === 'Selesai' || pesanan.status_pesanan === 'Cancel') {
           antreanPesanan = antreanPesanan.filter((_, i) => i !== index);
         } else {
           fetchPesananAktif();
@@ -140,6 +140,7 @@
                     <option value="Proses">Sedang Diproses</option>
                     <option value="Disajikan">Sudah Disajikan</option>
                     <option value="Selesai">Selesai</option>
+                    <option value="Cancel">Cancel (Batal)</option>
                   </select>
                 </td>
                 

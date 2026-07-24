@@ -71,13 +71,13 @@ export const buatPesanan = async (req: Request, res: Response) => {
 // 2. Get Pesanan Aktif untuk Dashboard Kasir (TIDAK Menampilkan Status "Selesai" dan "Cancel")
 export const getPesananAktif = async (req: Request, res: Response) => {
   try {
-    // Hanya ambil pesanan yang status_pesanan BUKAN "Selesai" dan status_bayar BUKAN "Cancel"
+    // Hanya ambil pesanan yang status_pesanan BUKAN "Selesai" dan BUKAN "Cancel"
     const activeOrders = await db.select()
       .from(pesanan)
       .where(
         and(
           ne(pesanan.status_pesanan, "Selesai"),
-          ne(pesanan.status_bayar, "Cancel")
+          ne(pesanan.status_pesanan, "Cancel")
         )
       );
 
@@ -159,14 +159,11 @@ export const updatePesanan = async (req: Request, res: Response) => {
       if (status_pesanan) updatePayload.status_pesanan = status_pesanan;
       if (id_staf) updatePayload.id_staf = Number(id_staf);
 
-      // Jika diset ke Selesai tetapi Belum Lunas atau Cancel, gagalkan
-      const finalStatusBayar = status_bayar || pesananData[0].status_bayar;
-      if (status_pesanan === "Selesai" && finalStatusBayar !== "Lunas") {
-        throw new Error("Pesanan tidak dapat diselesaikan karena pembayaran Belum Lunas!");
-      }
+      const targetStatusPesanan = status_pesanan || pesananData[0].status_pesanan;
+      const isCancelling = targetStatusPesanan === "Cancel";
 
-      // Jika status_bayar diubah menjadi Cancel (dan sebelumnya bukan Cancel), kembalikan stok menu & status meja
-      if (status_bayar === "Cancel" && pesananData[0].status_bayar !== "Cancel") {
+      if (isCancelling && pesananData[0].status_pesanan !== "Cancel") {
+        // Kembalikan stok menu
         const detail = await tx.select().from(detailPesanan).where(eq(detailPesanan.id_pesanan, Number(id)));
         for (const item of detail) {
           const menuData = await tx.select().from(menu).where(eq(menu.id, item.id_menu));
@@ -176,6 +173,19 @@ export const updatePesanan = async (req: Request, res: Response) => {
           }
         }
 
+        // Kembalikan status meja ke Tersedia
+        const idMeja = pesananData[0].id_meja;
+        if (idMeja) {
+          await tx.update(meja).set({ status: "Tersedia" }).where(eq(meja.id, idMeja));
+        }
+      } else if (targetStatusPesanan === "Selesai") {
+        // Jika diset ke Selesai tetapi Belum Lunas, gagalkan
+        const finalStatusBayar = status_bayar || pesananData[0].status_bayar;
+        if (finalStatusBayar !== "Lunas") {
+          throw new Error("Pesanan tidak dapat diselesaikan karena pembayaran Belum Lunas!");
+        }
+
+        // Jika status diset ke "Selesai", kembalikan status meja ke "Tersedia"
         const idMeja = pesananData[0].id_meja;
         if (idMeja) {
           await tx.update(meja).set({ status: "Tersedia" }).where(eq(meja.id, idMeja));
@@ -183,14 +193,6 @@ export const updatePesanan = async (req: Request, res: Response) => {
       }
 
       await tx.update(pesanan).set(updatePayload).where(eq(pesanan.id, Number(id)));
-
-      // Jika status diset ke "Selesai", kembalikan status meja ke "Tersedia"
-      if (status_pesanan === "Selesai") {
-        const idMeja = pesananData[0].id_meja;
-        if (idMeja) {
-          await tx.update(meja).set({ status: "Tersedia" }).where(eq(meja.id, idMeja));
-        }
-      }
     });
 
     res.json({ success: true, message: "Pesanan berhasil diperbarui" });
@@ -239,7 +241,7 @@ export const updateStatusPesanan = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { status_pesanan } = req.body;
 
-    const validStatus = ["Diterima", "Proses", "Disajikan", "Selesai"];
+    const validStatus = ["Diterima", "Proses", "Disajikan", "Selesai", "Cancel"];
     if (!validStatus.includes(status_pesanan)) {
       return res.status(400).json({ success: false, message: "Status pesanan tidak valid" });
     }
@@ -251,14 +253,28 @@ export const updateStatusPesanan = async (req: Request, res: Response) => {
         throw new Error("Pesanan tidak ditemukan");
       }
 
-      await tx.update(pesanan).set({ status_pesanan }).where(eq(pesanan.id, Number(id)));
+      if (status_pesanan === "Cancel" && pesananData[0].status_pesanan !== "Cancel") {
+        const detail = await tx.select().from(detailPesanan).where(eq(detailPesanan.id_pesanan, Number(id)));
+        for (const item of detail) {
+          const menuData = await tx.select().from(menu).where(eq(menu.id, item.id_menu));
+          if (menuData.length > 0) {
+            const stokBaru = menuData[0].stok + item.jumlah;
+            await tx.update(menu).set({ stok: stokBaru }).where(eq(menu.id, item.id_menu));
+          }
+        }
 
-      if (status_pesanan === "Selesai") {
+        const idMeja = pesananData[0].id_meja;
+        if (idMeja) {
+          await tx.update(meja).set({ status: "Tersedia" }).where(eq(meja.id, idMeja));
+        }
+      } else if (status_pesanan === "Selesai") {
         const idMeja = pesananData[0].id_meja;
         if (idMeja) {
           await tx.update(meja).set({ status: "Tersedia" }).where(eq(meja.id, idMeja));
         }
       }
+
+      await tx.update(pesanan).set({ status_pesanan }).where(eq(pesanan.id, Number(id)));
     });
 
     res.json({ success: true, message: `Status pesanan berhasil diperbarui menjadi ${status_pesanan}` });

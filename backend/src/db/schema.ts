@@ -28,8 +28,8 @@ export const pesanan = mysqlTable("pesanan", {
   id_meja: int("id_meja").references(() => meja.id), 
   id_staf: int("id_staf").references(() => staf.id), 
   total_harga: int("total_harga").default(0),
-  status_bayar: mysqlEnum("status_bayar", ["Belum Lunas", "Lunas", "Cancel"]).default("Belum Lunas"),
-  status_pesanan: mysqlEnum("status_pesanan", ["Diterima", "Proses", "Disajikan", "Selesai"]).default("Diterima"),
+  status_bayar: mysqlEnum("status_bayar", ["Belum Lunas", "Lunas"]).default("Belum Lunas"),
+  status_pesanan: mysqlEnum("status_pesanan", ["Diterima", "Proses", "Disajikan", "Selesai", "Cancel"]).default("Diterima"),
   tanggal: timestamp("tanggal").defaultNow(),
 });
 

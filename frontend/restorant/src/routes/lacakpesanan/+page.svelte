@@ -15,7 +15,7 @@
     id_staf: number | null;
     total_harga: number;
     status_bayar: 'Belum Lunas' | 'Lunas';
-    status_pesanan: 'Diterima' | 'Proses' | 'Disajikan' | 'Selesai';
+    status_pesanan: 'Diterima' | 'Proses' | 'Disajikan' | 'Selesai' | 'Cancel';
     tanggal: string;
     items: DetailItem[];
   }
@@ -62,6 +62,7 @@
       case 'Proses': return '#f59e0b';
       case 'Disajikan': return '#8b5cf6';
       case 'Selesai': return '#10b981';
+      case 'Cancel': return '#ef4444';
       default: return '#6b7280';
     }
   }
