@@ -1,0 +1,104 @@
+/* Mewarisi variabel warna dari layout.css induk */
+.form-lacak, .result-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.result-card {
+  margin-top: 2rem;
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+.search-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* Turun ke bawah jika layar sempit */
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input input:focus {
+  border-color: var(--primary-color);
+}
+
+.error-msg {
+  color: var(--primary-color);
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+/* --- Styling Komponen Hasil Pencarian --- */
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed #e2e8f0;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.badge-status {
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.order-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-light); /* Meminjam dari layout.css */
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.item-meta {
+  color: var(--text-muted); /* Meminjam dari layout.css */
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.result-footer {
+  margin-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-price {
+  font-size: 1.5rem;
+  color: var(--primary-color); /* Meminjam dari layout.css */
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
