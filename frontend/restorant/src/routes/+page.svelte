@@ -15,13 +15,13 @@
     background-repeat: no-repeat;
   }
   .bg-2 {
-    background-image: url(https://www.dapurkobe.co.id/wp-content/uploads/sate-ayam.jpg);
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHXhQ_Y8-YA7s5kD47xvfjeJ-1yNtxD6OvkAeftYss05TThk4UeuDEuWZe&s=10);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
   .bg-3 {
-    background-image: url(https://www.dapurkobe.co.id/wp-content/uploads/sate-ayam.jpg);
+    background-image: url(https://assets.unileversolutions.com/recipes-v2/257471.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
