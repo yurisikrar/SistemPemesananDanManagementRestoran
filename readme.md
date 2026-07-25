@@ -17,8 +17,8 @@ Aplikasi ini dikembangkan untuk memecahkan beberapa masalah operasional di resto
 ## 🗄️ Skema Database (ERD)
 Berikut adalah visualisasi relasi antar tabel dalam database aplikasi restoran kami:
 
-![Diagram ERD Restoran](assets/gambar_erd_restoran.png)
-*(Catatan: Silakan ganti path `assets/gambar_erd_restoran.png` di atas dengan lokasi direktori gambar Anda)*
+![Diagram ERD Restoran](assets/restoran.png)
+
 
 **Daftar Tabel Utama:**
 1. **Staf:** Menyimpan kredensial pekerja (`username`, `password`, dan `role` Kasir/Dapur).
